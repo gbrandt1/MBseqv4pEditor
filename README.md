@@ -1,6 +1,6 @@
 # MidiBox SEQ V4+ Editor
 
-[screenshot step editor]: https://github.com/gbrandt1/MBseqv4pEditor/blob/main/screenshot-2020-10-03.png "MidiBox SEQ V4+ Editor"
+![screenshot step editor](https://github.com/gbrandt1/MBseqv4pEditor/blob/main/screenshot-2020-10-03.png)
 
 
 Version: 00.00.01 -under development-
