@@ -1,11 +1,17 @@
 # MidiBox SEQ V4+ Editor
 
+[screenshot step editor]: screenshot-2020-10-03.png "MidiBox SEQ V4+ Editor"
+
+
 Version: 00.00.01 -under development-
+
 by southpole (Gerhard Brandt)
 
 Disclaimer:
 * This is still alpha software!!!
 * Only run the editor on a backup copy of your SD card!!!
+* Discussion thread on the forum:
+http://midibox.org/forums/topic/21501-new-editor-for-mb-seq-v4-under-development/
 
 This is an editor to modify the SD card contents of a MIDIbox SEQ V4+ hardware MIDI sequencer by Torsten Klose et al.
 Find more about the MIDIbox project and SEQ V4+ here:
@@ -128,13 +134,10 @@ TO DO
 
 ## License
 
-Like everything in MidiBox, this project is beerware.
-
-Free for non-commercial private use.
-
-Commercial use not allowed.
-
-But you can buy me a beer via PayPal if you like:
+* Like everything in MidiBox, this project is beerware. You can buy me a beer via PayPal if you like:
 
     gerhard.brandt76@gmail.com
+
+* Free for non-commercial private use.
+* Commercial use not allowed.
 
