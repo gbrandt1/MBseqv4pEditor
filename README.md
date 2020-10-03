@@ -1,6 +1,11 @@
 # MidiBox SEQ V4+ Editor
 
-Version: 00.00.00 -under development-
+Version: 00.00.01 -under development-
+by southpole (Gerhard Brandt)
+
+Disclaimer:
+* This is still alpha software!!!
+* Only run the editor on a backup copy of your SD card!!!
 
 This is an editor to modify the SD card contents of a MIDIbox SEQ V4+ hardware MIDI sequencer by Torsten Klose et al.
 Find more about the MIDIbox project and SEQ V4+ here:
@@ -23,9 +28,6 @@ If not you should study the documentation:
 The editor was built bottom-up from the various file formats written to the SD card rather than from user perspective like the SEQ v4+ interface on the actual hardware.
 That's why some items seem to be in different places or are presented slightly different.
 
-Disclaimer:
-* This is still alpha software!!!
-* Only run the editor on a backup copy of your SD card!!!
 
 ## System requirements
 
@@ -36,15 +38,16 @@ virtual environment and install required packages using  requirements.txt
 
 Since Python and TkInter are quite slow a fast computer is of advantage.
 
+
 ## Cmd command line interface
 
 Run it using
 
-    python3 seqv4p_sh.py
+    python3 mbs4edit_sh.py
 
-Type '?' to see available commands.
-Tab completion for certain options and paths as well as command history are supported.
-History is saved in .seqv4p_history
+* Type '?' to see available commands.
+* Tab completion for certain options and paths
+* Command history. Saved in .seqv4p_history
 
 Example Session:
 
@@ -58,7 +61,7 @@ Example Session:
 
 Run it using
 
-    python3 controller_tk.py
+    python3 mbs4edit.py
 
 ### Main window
 
@@ -126,7 +129,12 @@ TO DO
 ## License
 
 Like everything in MidiBox, this project is beerware.
-Free for non-commercial private use,
-but you can buy me a beer via PayPal if you like.
-gerhard.brandt76@gmail.com
+
+Free for non-commercial private use.
+
+Commercial use not allowed.
+
+But you can buy me a beer via PayPal if you like:
+
+    gerhard.brandt76@gmail.com
 
