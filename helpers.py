@@ -228,8 +228,9 @@ def disable_children(parent):
     for child in parent.winfo_children():
         wtype = child.winfo_class()
         if wtype not in ('TFrame', 'TLabelframe', 'Scrollbar'):
-            #print (wtype)
-            child.configure(state='disable')
+            # print (wtype)
+            # child.configure(state='disable')
+            child.state(["disabled"])
         else:
             disable_children(child)
 
@@ -240,6 +241,7 @@ def enable_children(parent):
         # print (wtype)
         if wtype not in ('Treeview', 'TFrame', 'TLabelframe', 'Scrollbar'):
             # if child['state'] != 'readonly':
-            child.configure(state='normal')
+            # child.configure(state='normal')
+            child.state(["!disabled"])
         else:
             enable_children(child)
