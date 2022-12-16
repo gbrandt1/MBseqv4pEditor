@@ -45,25 +45,24 @@ class EditableTreeview(Treeview):
         self._header_clicked = False
         self._header_dragged = False
 
-        self.bind('<<TreeviewSelect>>', self.__check_focus)
+        self.bind("<<TreeviewSelect>>", self.__check_focus)
         #  Wheel events?
-        self.bind('<4>', lambda e: self.after_idle(self.__updateWnds))
-        self.bind('<5>', lambda e: self.after_idle(self.__updateWnds))
+        self.bind("<4>", lambda e: self.after_idle(self.__updateWnds))
+        self.bind("<5>", lambda e: self.after_idle(self.__updateWnds))
         # self.bind('<ButtonRelease-1>', self.__check_focus)
-        self.bind('<KeyRelease>', self.__check_focus)
-        self.bind('<Home>', functools.partial(self.__on_key_press, 'Home'))
-        self.bind('<End>', functools.partial(self.__on_key_press, 'End'))
-        self.bind('<Button-1>', self.__on_button1)
-        self.bind('<ButtonRelease-1>', self.__on_button1_release)
-        self.bind('<Motion>', self.__on_mouse_motion)
-        self.bind('<Configure>',
-                  lambda e: self.after_idle(self.__updateWnds))
+        self.bind("<KeyRelease>", self.__check_focus)
+        self.bind("<Home>", functools.partial(self.__on_key_press, "Home"))
+        self.bind("<End>", functools.partial(self.__on_key_press, "End"))
+        self.bind("<Button-1>", self.__on_button1)
+        self.bind("<ButtonRelease-1>", self.__on_button1_release)
+        self.bind("<Motion>", self.__on_mouse_motion)
+        self.bind("<Configure>", lambda e: self.after_idle(self.__updateWnds))
 
-        #self.bind('<Leave>', lambda _: self.__clear_inplace_widgets())
+        # self.bind('<Leave>', lambda _: self.__clear_inplace_widgets())
 
     def __on_button1(self, event):
         r = event.widget.identify_region(event.x, event.y)
-        if r in ('separator', 'header'):
+        if r in ("separator", "header"):
             self._header_clicked = True
 
     def __on_mouse_motion(self, event):
@@ -77,10 +76,10 @@ class EditableTreeview(Treeview):
         self._header_dragged = False
 
     def __on_key_press(self, key, event):
-        if key == 'Home':
+        if key == "Home":
             self.selection_set("")
             self.focus(self.get_children()[0])
-        if key == 'End':
+        if key == "End":
             self.selection_set("")
             self.focus(self.get_children()[-1])
 
@@ -136,11 +135,11 @@ class EditableTreeview(Treeview):
         cols = self.__get_display_columns()
         for col in cols:
             self.__event_info = (col, item)
-            self.event_generate('<<TreeviewInplaceEdit>>')
+            self.event_generate("<<TreeviewInplaceEdit>>")
             if col in self._inplace_widgets:
                 w = self._inplace_widgets[col]
-                w.bind('<Key-Tab>', lambda e: w.tk_focusNext().focus_set())
-                w.bind('<Shift-Key-Tab>', lambda e: w.tk_focusPrev().focus_set())
+                w.bind("<Key-Tab>", lambda e: w.tk_focusNext().focus_set())
+                w.bind("<Shift-Key-Tab>", lambda e: w.tk_focusPrev().focus_set())
 
     def __updateWnds(self, event=None):
         if not self._curfocus:
@@ -150,14 +149,13 @@ class EditableTreeview(Treeview):
         for col in cols:
             if col in self._inplace_widgets:
                 wnd = self._inplace_widgets[col]
-                bbox = ''
+                bbox = ""
                 if self.exists(item):
                     bbox = self.bbox(item, column=col)
-                if bbox == '':
+                if bbox == "":
                     wnd.place_forget()
                 elif col in self._inplace_widgets_show:
-                    wnd.place(x=bbox[0], y=bbox[1],
-                              width=bbox[2], height=bbox[3])
+                    wnd.place(x=bbox[0], y=bbox[1], width=bbox[2], height=bbox[3])
 
     def __clear_inplace_widgets(self):
         """Remove all inplace edit widgets."""
@@ -172,30 +170,30 @@ class EditableTreeview(Treeview):
                 # del self._inplace_widgets[c]
 
     def __get_display_columns(self):
-        cols = self.cget('displaycolumns')
-        show = (str(s) for s in self.cget('show'))
-        if '#all' in cols:
-            cols = self.cget('columns') + ('#0',)
-        elif 'tree' in show:
-            cols = cols + ('#0',)
+        cols = self.cget("displaycolumns")
+        show = (str(s) for s in self.cget("show"))
+        if "#all" in cols:
+            cols = self.cget("columns") + ("#0",)
+        elif "tree" in show:
+            cols = cols + ("#0",)
         return cols
 
     def get_event_info(self):
         return self.__event_info
 
     def __get_value(self, col, item):
-        if col == '#0':
-            return self.item(item, 'text')
+        if col == "#0":
+            return self.item(item, "text")
         else:
             return self.set(item, col)
 
     def __set_value(self, col, item, value):
-        if col == '#0':
+        if col == "#0":
             self.item(item, text=value)
         else:
             self.set(item, col, value)
         self.__event_info = (col, item)
-        self.event_generate('<<TreeviewCellEdited>>')
+        self.event_generate("<<TreeviewCellEdited>>")
 
     def __update_value(self, col, item):
         if not self.exists(item):
@@ -212,17 +210,16 @@ class EditableTreeview(Treeview):
         svar.set(self.__get_value(col, item))
         if col not in self._inplace_widgets:
             self._inplace_widgets[col] = Entry(
-                self, textvariable=svar,
-                #font='TkFixedFont',
+                self,
+                textvariable=svar,
+                # font='TkFixedFont',
             )
         entry = self._inplace_widgets[col]
-        entry.bind('<Unmap>', lambda e: self.__update_value(col, item))
-        entry.bind('<FocusOut>', lambda e: self.__update_value(col, item))
+        entry.bind("<Unmap>", lambda e: self.__update_value(col, item))
+        entry.bind("<FocusOut>", lambda e: self.__update_value(col, item))
         self._inplace_widgets_show[col] = True
 
-    def inplace_checkbutton(
-        self, col, item, onvalue='True', offvalue='False'
-    ):
+    def inplace_checkbutton(self, col, item, onvalue="True", offvalue="False"):
         if col not in self._inplace_vars:
             self._inplace_vars[col] = StringVar()
         svar = self._inplace_vars[col]
@@ -233,18 +230,15 @@ class EditableTreeview(Treeview):
                 textvariable=svar,
                 variable=svar,
                 onvalue=onvalue,
-                offvalue=offvalue
+                offvalue=offvalue,
             )
         cb = self._inplace_widgets[col]
-        cb.bind('<Unmap>', lambda e: self.__update_value(col, item))
-        cb.bind('<FocusOut>', lambda e: self.__update_value(col, item))
+        cb.bind("<Unmap>", lambda e: self.__update_value(col, item))
+        cb.bind("<FocusOut>", lambda e: self.__update_value(col, item))
         self._inplace_widgets_show[col] = True
 
-    def inplace_combobox(
-        self, col, item, values, readonly=True,
-        update_values=False
-    ):
-        state = 'readonly' if readonly else 'normal'
+    def inplace_combobox(self, col, item, values, readonly=True, update_values=False):
+        state = "readonly" if readonly else "normal"
         if col not in self._inplace_vars:
             self._inplace_vars[col] = StringVar()
         svar = self._inplace_vars[col]
@@ -252,14 +246,16 @@ class EditableTreeview(Treeview):
         if col not in self._inplace_widgets:
             self._inplace_widgets[col] = Combobox(
                 self,
-                textvariable=svar, values=values, state=state,
-                #font='TkFixedFont',
+                textvariable=svar,
+                values=values,
+                state=state,
+                # font='TkFixedFont',
             )
         if update_values:
             self._inplace_widgets[col].configure(values=values)
         cb = self._inplace_widgets[col]
-        cb.bind('<Unmap>', lambda e: self.__update_value(col, item))
-        cb.bind('<FocusOut>', lambda e: self.__update_value(col, item))
+        cb.bind("<Unmap>", lambda e: self.__update_value(col, item))
+        cb.bind("<FocusOut>", lambda e: self.__update_value(col, item))
         self._inplace_widgets_show[col] = True
 
     def inplace_spinbox(self, col, item, min, max, step):
@@ -270,12 +266,15 @@ class EditableTreeview(Treeview):
         if col not in self._inplace_widgets:
             self._inplace_widgets[col] = Spinbox(
                 self,
-                textvariable=svar, from_=min, to=max, increment=step,
-                #font='TkFixedFont',
+                textvariable=svar,
+                from_=min,
+                to=max,
+                increment=step,
+                # font='TkFixedFont',
             )
         sb = self._inplace_widgets[col]
-        sb.bind('<Unmap>', lambda e: self.__update_value(col, item))
-        sb.bind('<FocusOut>', lambda e: self.__update_value(col, item))
+        sb.bind("<Unmap>", lambda e: self.__update_value(col, item))
+        sb.bind("<FocusOut>", lambda e: self.__update_value(col, item))
         self._inplace_widgets_show[col] = True
 
     def inplace_custom(self, col, item, widget, stringvar=None):
@@ -287,8 +286,8 @@ class EditableTreeview(Treeview):
         svar = self._inplace_vars[col]
         svar.set(self.__get_value(col, item))
         self._inplace_widgets[col] = widget
-        widget.bind('<Unmap>', lambda e: self.__update_value(col, item))
-        widget.bind('<FocusOut>', lambda e: self.__update_value(col, item))
+        widget.bind("<Unmap>", lambda e: self.__update_value(col, item))
+        widget.bind("<FocusOut>", lambda e: self.__update_value(col, item))
         self._inplace_widgets_show[col] = True
 
 
@@ -305,6 +304,6 @@ if __name__ == "__main__":
         etv.column(col, stretch=False, width=150)
         etv.heading(col, text=col)
     for row in range(10):
-        etv.insert('', 'end', values=(1, 2, 3, 4))
+        etv.insert("", "end", values=(1, 2, 3, 4))
 
     root.mainloop()

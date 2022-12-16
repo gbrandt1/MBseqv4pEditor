@@ -1,17 +1,15 @@
-
 import logging
 from collections import OrderedDict
 from tkinter import *
 from tkinter.ttk import *
 
-from helpers import *
-from view_tk.editabletreeview import EditableTreeview
+from ..helpers import *
+from .editabletreeview import EditableTreeview
 
-logger = logging.getLogger(f'{__name__:{LOGW_NAME}}')
+logger = logging.getLogger(f"{__name__:{LOGW_NAME}}")
 
 
 class PatternEditor(Frame):
-
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
         self.controller = controller
@@ -37,7 +35,7 @@ class PatternEditor(Frame):
         for i in range(4):
             btn_trk = Button(
                 frm_tracks,
-                style='fixed.TButton',
+                style="fixed.TButton",
                 textvariable=self.track_var[i],
                 command=lambda i=i: self.edit_track(i),
             )
@@ -50,27 +48,29 @@ class PatternEditor(Frame):
             frm_links,
             width=3,
             textvariable=self.mixer_map_var,
-            from_=0, to=MAX_NUM_MAPS,
+            from_=0,
+            to=MAX_NUM_MAPS,
         )
         btn_mmp = Button(
             frm_links,
-            text='Mixer Map',
+            text="Mixer Map",
             command=self.select_mixer_map,
         )
         spx_syx = Spinbox(
             frm_links,
             width=3,
             textvariable=self.sysex_setup_var,
-            from_=0, to=63,
+            from_=0,
+            to=63,
         )
         btn_syx = Button(
             frm_links,
-            text='SysEx Setup',
+            text="SysEx Setup",
             command=self.select_sysex_setup,
         )
 
-        spx_mmp.bind('<FocusOut>', lambda e: self.update_pattern())
-        spx_syx.bind('<FocusOut>', lambda e: self.update_pattern())
+        spx_mmp.bind("<FocusOut>", lambda e: self.update_pattern())
+        spx_syx.bind("<FocusOut>", lambda e: self.update_pattern())
 
         btn_mmp.grid(row=0, column=1)
         spx_mmp.grid(row=0, column=0)
@@ -81,16 +81,16 @@ class PatternEditor(Frame):
 
     #   npn, cat, name, tracks, mmap, sysex):
     def set_pattern(self, npn, pattern):
-        logger.debug('set_pattern {npn} {pattern}')
+        logger.debug("set_pattern {npn} {pattern}")
         if not pattern:
             return
         self.pattern = pattern
         self.npn_var.set(value=npn)
-      # self.cne.set_pattern(pattern)
+        # self.cne.set_pattern(pattern)
         for i in range(4):
-            self.track_var[i].set(value=f'T{i+1} {pattern.tracks[i]}')
-        self.mixer_map_var.set(value=f'{pattern.mixer_map}')
-        self.sysex_setup_var.set(value=f'{pattern.sysex_setup}')
+            self.track_var[i].set(value=f"T{i+1} {pattern.tracks[i]}")
+        self.mixer_map_var.set(value=f"{pattern.mixer_map}")
+        self.sysex_setup_var.set(value=f"{pattern.sysex_setup}")
 
     def update_pattern(self):
         #   self.pattern.cat = self.cne.cat_var.get()
@@ -100,19 +100,19 @@ class PatternEditor(Frame):
         #  npn = self.npn_var.get()
         self.pattern.modified()
         #   self.controller.do('update_pattern',npn=npn)
-        logger.info(f'update_pattern {vars(self.pattern)}')
+        logger.info(f"update_pattern {vars(self.pattern)}")
 
     def select_mixer_map(self):
-        self.controller.do('select_mixer_map', self.mixer_map_var.get())
+        self.controller.do("select_mixer_map", self.mixer_map_var.get())
 
     def select_sysex_setup(self):
-        self.controller.do('select_sysex_setup', self.sysex_setup_var.get())
+        self.controller.do("select_sysex_setup", self.sysex_setup_var.get())
 
     def edit_track(self, idx):
         npn = self.npn_var.get()
         sel = [npn]
-        self.controller.do('set_pattern_selection', sel)
-        self.controller.do('show_editor', 'step_editor')
+        self.controller.do("set_pattern_selection", sel)
+        self.controller.do("show_editor", "step_editor")
 
     # def set_cat_name(self):
     #    self.controller.do(
@@ -122,7 +122,6 @@ class PatternEditor(Frame):
 
 
 class PatternBanksEditor(Frame):
-
     def __init__(self, parent, controller):
         self.controller = controller
         super().__init__(parent)
@@ -159,19 +158,19 @@ class PatternBanksEditor(Frame):
                 EditableTreeview(
                     frm_tv,
                     selectmode=EXTENDED,
-                    columns=('cat', 'label'),
+                    columns=("cat", "label"),
                 )
             )
 
-            tv[i].column('#  0', width=60, stretch=1)
-            tv[i].column('cat', width=60, stretch=1)
-            tv[i].column('label', width=100, stretch=1)
+            tv[i].column("#  0", width=60, stretch=1)
+            tv[i].column("cat", width=60, stretch=1)
+            tv[i].column("label", width=100, stretch=1)
 
-            tv[i].heading('#  0', text=f'Bank {i+1}')
-            tv[i].heading('cat', text='Category')
-            tv[i].heading('label', text='Label')
+            tv[i].heading("#  0", text=f"Bank {i+1}")
+            tv[i].heading("cat", text="Category")
+            tv[i].heading("label", text="Label")
 
-            tv[i].tag_configure('empty', foreground='gray60')
+            tv[i].tag_configure("empty", foreground="gray60")
 
             self.populate_roots(i)
 
@@ -181,25 +180,22 @@ class PatternBanksEditor(Frame):
             tv[i].bind("<Command-v>", self.on_paste)
             tv[i].bind("<BackSpace>", self.on_clear)
             tv[i].bind("<MouseWheel>", self.on_mouse_wheel)
-            tv[i].bind('<Left>', self.on_lr_key, add=True)
-            tv[i].bind('<Right>', self.on_lr_key, add=True)
+            tv[i].bind("<Left>", self.on_lr_key, add=True)
+            tv[i].bind("<Right>", self.on_lr_key, add=True)
             tv[i].bind(
-                '<<TreeviewSelect>>',
+                "<<TreeviewSelect>>",
                 lambda event, i=i: self.on_select(event, i),
                 add=True,
             )
             tv[i].bind(
-                '<<TreeviewCellEdited>>',
-                lambda event, i=i: self.on_cell_changed(event, i)
+                "<<TreeviewCellEdited>>",
+                lambda event, i=i: self.on_cell_changed(event, i),
             )
             tv[i].bind(
-                '<<TreeviewInplaceEdit>>',
-                lambda event, i=i: self.on_row_edit(event, i)
+                "<<TreeviewInplaceEdit>>", lambda event, i=i: self.on_row_edit(event, i)
             )
 
-            pe.append(
-                PatternEditor(frm_tv, self.controller)
-            )
+            pe.append(PatternEditor(frm_tv, self.controller))
 
             header.pack(fill=X)
             tv[i].pack(fill=BOTH, expand=TRUE)
@@ -211,10 +207,10 @@ class PatternBanksEditor(Frame):
     def init_toolbar(self):
         bf = Frame(self)
         buttons = [
-            ('Copy', self.on_copy),
-            ('Paste', self.on_paste),
-            ('Clear', self.on_clear),
-            ('Save', self.on_save),
+            ("Copy", self.on_copy),
+            ("Paste", self.on_paste),
+            ("Clear", self.on_clear),
+            ("Save", self.on_save),
             # ('Dump', self.on_dump),
         ]
         for name, cmd in buttons:
@@ -227,18 +223,18 @@ class PatternBanksEditor(Frame):
         for np in range(MAX_NUM_PATTERN):
             npn = idx2npn(nb, np)
             #   , values=values)
-            self.tv[nb].insert('', 'end', npn, text=f' {npn}', tag='empty')
+            self.tv[nb].insert("", "end", npn, text=f" {npn}", tag="empty")
 
     def update_from_bank(self, nb=None, force=False):
         if not nb:
             nb = self.tvidx
         if not self.controller.session:
-            logger.warn('update_from_bank: No session open!')
+            logger.warn("update_from_bank: No session open!")
             return
         bank = self.controller.session.banks[nb]
         if bank.has_modifications() or force:
             bankname = bank.name
-            self.head_var[nb].set(f'{bankname}')
+            self.head_var[nb].set(f"{bankname}")
             for np in range(MAX_NUM_PATTERN):
                 npn = idx2npn(nb, np)
                 self.update_from_pattern(npn)
@@ -250,28 +246,34 @@ class PatternBanksEditor(Frame):
             return
         m = pattern.modified_symbol()
         values = (pattern.cat, pattern.label, m)
-        tag = ''
+        tag = ""
         if pattern.name.isspace():
-            values = ('', f'<Pattern {npn[2:]}>', '',)
-            tag = 'empty'
-        self.tv[nb].item(npn, text=f'{npn}{m}', values=values, tag=tag)
+            values = (
+                "",
+                f"<Pattern {npn[2:]}>",
+                "",
+            )
+            tag = "empty"
+        self.tv[nb].item(npn, text=f"{npn}{m}", values=values, tag=tag)
 
     def yview(self, *args):
         [self.tv[i].yview(*args) for i in range(MAX_NUM_BANKS)]
 
     def on_mouse_wheel(self, event):
-        [self.tv[i].yview("scroll", -event.delta, "units")
-         for i in range(MAX_NUM_BANKS)]
+        [
+            self.tv[i].yview("scroll", -event.delta, "units")
+            for i in range(MAX_NUM_BANKS)
+        ]
         #   this prevents default bindings from firing, which
         #   would end up scrolling the widget twice
         return "break"
 
     def on_lr_key(self, event):
         #   print(event)
-        if event.keysym == 'Left':
+        if event.keysym == "Left":
             if self.tvidx > 0:
                 self.tvidx -= 1
-        if event.keysym == 'Right':
+        if event.keysym == "Right":
             if self.tvidx < 3:
                 self.tvidx += 1
 
@@ -285,20 +287,20 @@ class PatternBanksEditor(Frame):
         self.tvidx = i
 
         #   build pattern selection in controller format
-        #ctrlsel = OrderedDict()
+        # ctrlsel = OrderedDict()
         # for npn in self.tv[i].selection():
         #    ctrlsel[npn] = (0, 1, 2, 3,)
         ctrlsel = list(self.tv[i].selection())
 
-        self.controller.do('set_pattern_selection', selection=ctrlsel)
+        self.controller.do("set_pattern_selection", selection=ctrlsel)
 
     def on_cell_changed(self, event, i):
         self.tvidx = i
         (col, item) = self.tv[i].get_event_info()
-        logger.info(f'Column {col} of item {item} was changed')
+        logger.info(f"Column {col} of item {item} was changed")
 
         pattern = self.controller.session.get_pattern(item)
-        values = self.tv[i].item(item)['values']
+        values = self.tv[i].item(item)["values"]
 
         pattern.set_cat_label(values[0], values[1])
         pattern.modified()
@@ -308,7 +310,7 @@ class PatternBanksEditor(Frame):
     def on_row_edit(self, event, i):
         self.tvidx = i
         col, item = self.tv[i].get_event_info()
-        logger.debug(f'on_row_edit {col} {item} {i}')
+        logger.debug(f"on_row_edit {col} {item} {i}")
         if not self.controller.sdcard:
             return
 
@@ -316,33 +318,32 @@ class PatternBanksEditor(Frame):
         vlabel = self.controller.sdcard.trklabel.data
 
         #  self.tv[i].inplace_entry(col, item)
-        if col == 'cat':
+        if col == "cat":
             self.tv[i].inplace_combobox(col, item, values=vcat, readonly=False)
-        if col == 'label':
-            self.tv[i].inplace_combobox(
-                col, item, values=vlabel, readonly=False)
+        if col == "label":
+            self.tv[i].inplace_combobox(col, item, values=vlabel, readonly=False)
 
     def on_copy(self, event=None):
-        self.controller.do('copy_pattern')
+        self.controller.do("copy_pattern")
 
     def on_paste(self, event=None):
-        #i = self.tvidx
+        # i = self.tvidx
         # self.tv[i].__clear_inplace_widgets()
-        self.controller.do('paste_pattern')
-        #(col, item) = self.tv[i].get_event_info()
+        self.controller.do("paste_pattern")
+        # (col, item) = self.tv[i].get_event_info()
         # self.update_from_pattern(item)
-        #self.__event_info = (col, item)
+        # self.__event_info = (col, item)
         # self.event_generate('<<TreeviewCellEdited>>')
         self.update_from_bank()
 
     def on_clear(self, event=None):
-        self.controller.do('clear_pattern')
+        self.controller.do("clear_pattern")
 
     def on_save(self, event=None):
-        self.controller.do('save_pattern_banks')
+        self.controller.do("save_pattern_banks")
 
     def on_dump(self, event=None):
-        self.controller.do('dump_selection')
+        self.controller.do("dump_selection")
 
     #   def update_pattern_bank_editors(self):
     #      for nb in range(MAX_NUM_BANKS):

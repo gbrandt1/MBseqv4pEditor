@@ -2,17 +2,16 @@ import logging
 from tkinter import *
 from tkinter.ttk import *
 
-from helpers import *
+from ..helpers import *
 
-logger = logging.getLogger(f'{__name__:{LOGW_NAME}}')
+logger = logging.getLogger(f"{__name__:{LOGW_NAME}}")
 
 
 class PhraseBar(LabelFrame):
-
     def __init__(self, parent, controller):
         super().__init__(
             parent,
-            text='Phrase',
+            text="Phrase",
             # padding=2,
         )
         self.controller = controller
@@ -23,11 +22,11 @@ class PhraseBar(LabelFrame):
         self.trk_btn = []
         self.multiple = False
 
-        self.grp_selected = [False]*4
-        self.trk_selected = [False]*16
+        self.grp_selected = [False] * 4
+        self.trk_selected = [False] * 16
 
         for g in range(4):
-            self.group_var.append(StringVar(value=f'Group {g+1}'))
+            self.group_var.append(StringVar(value=f"Group {g+1}"))
             grp_frm = Frame(
                 self,
             )
@@ -41,17 +40,17 @@ class PhraseBar(LabelFrame):
             )
             self.grp_btn[g].pack(fill=X, expand=TRUE)
             for t in range(4):
-                self.track_var.append(StringVar(value=f'G{g+1}T{t+1}'))
+                self.track_var.append(StringVar(value=f"G{g+1}T{t+1}"))
                 self.phrase_var.append(StringVar())
                 self.trk_btn.append(
                     Button(
                         grp_frm,
                         width=4,
-                        textvariable=self.phrase_var[4*g+t],
+                        textvariable=self.phrase_var[4 * g + t],
                         command=lambda g=g, t=t: self.on_click_track(g, t),
                     )
                 )
-                self.trk_btn[4*g+t].pack(side=LEFT, fill=X, expand=TRUE)
+                self.trk_btn[4 * g + t].pack(side=LEFT, fill=X, expand=TRUE)
             # if g < 3:
             #    Separator(self, orient=VERTICAL).pack(
             #        side=LEFT, fill=Y, expand=TRUE)
@@ -65,12 +64,12 @@ class PhraseBar(LabelFrame):
                 continue
             self.group_var[g].set(f'"{npn:4} {pattern.cat}-{pattern.label}"')
             for t in range(4):
-                track = self.controller.tracks[4*g+t]
+                track = self.controller.tracks[4 * g + t]
                 if track:
                     m = track.modified_symbol()
                 else:
-                    m = ' '
-                self.phrase_var[4*g+t].set(f'G{g+1}T{t+1}{m}')
+                    m = " "
+                self.phrase_var[4 * g + t].set(f"G{g+1}T{t+1}{m}")
         pattern = self.controller.pattern
 
     def on_click_group(self, g):
@@ -78,44 +77,44 @@ class PhraseBar(LabelFrame):
             return
         npn = self.controller.phrase[g]
         sel = [npn]
-        self.controller.do('set_pattern_selection', sel)
+        self.controller.do("set_pattern_selection", sel)
         self.controller.set_pattern(npn)
-        self.controller.set_track(4*g)
-        logger.info(f'on_click_group {npn} {g}')
-        self.controller.do('show_editor', 'pattern_banks_editor')
+        self.controller.set_track(4 * g)
+        logger.info(f"on_click_group {npn} {g}")
+        self.controller.do("show_editor", "pattern_banks_editor")
         self.set_group_button_state(g)
         self.controller.show_status()
 
     def set_group_button_state(self, g):
         if not self.multiple:
-            [b.state(['!pressed']) for b in self.grp_btn]
-            [b.state(['!pressed']) for b in self.trk_btn]
-            self.grp_btn[g].state(['pressed'])
+            [b.state(["!pressed"]) for b in self.grp_btn]
+            [b.state(["!pressed"]) for b in self.trk_btn]
+            self.grp_btn[g].state(["pressed"])
 
     def on_click_track(self, g, t):
         if not self.controller.phrase:
             return
         npn = self.controller.phrase[g]
         sel = [npn]
-        nt = 4*g+t
-        logger.info(f'\non_click_track {npn} {g} {t} {nt}')
-        self.controller.do('set_pattern_selection', sel)
-        #self.controller.set_pattern(npn)
+        nt = 4 * g + t
+        logger.info(f"\non_click_track {npn} {g} {t} {nt}")
+        self.controller.do("set_pattern_selection", sel)
+        # self.controller.set_pattern(npn)
         self.controller.set_track(nt)
-        self.controller.do('show_editor', 'track')
+        self.controller.do("show_editor", "track")
         self.set_track_button_state(g, t)
-        #self.controller.show_status()
-        #dump(self.controller)
+        # self.controller.show_status()
+        # dump(self.controller)
 
     def set_track_button_state(self, g, t):
         if not self.multiple:
-            [b.state(['!pressed']) for b in self.grp_btn]
-            [b.state(['!pressed']) for b in self.trk_btn]
-            self.trk_btn[4*g+t].state(['pressed'])
+            [b.state(["!pressed"]) for b in self.grp_btn]
+            [b.state(["!pressed"]) for b in self.trk_btn]
+            self.trk_btn[4 * g + t].state(["pressed"])
 
-    #def __repr__(self):
+    # def __repr__(self):
     #    buf = ''
     #    for g in controller.group
-     #   return (
-     #       f''
-     #   )
+    #   return (
+    #       f''
+    #   )

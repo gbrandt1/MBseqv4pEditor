@@ -1,9 +1,9 @@
-
 from tkinter import *
 from tkinter.ttk import *
 
-from helpers import *
-logger = logging.getLogger(f'{__name__:{LOGW_NAME}}')
+from ..helpers import *
+
+logger = logging.getLogger(f"{__name__:{LOGW_NAME}}")
 
 
 class SDCardMenu(Menu):
@@ -14,40 +14,38 @@ class SDCardMenu(Menu):
         self.add_command(
             label="Open",
             command=self.open_sdcard,
-            accelerator='Cmd+O',
+            accelerator="Cmd+O",
             underline=0,
         )
         self.add_command(
-            label="Save",
-            command=self.save_sdcard,
-            accelerator='Cmd+S',
-            underline=0
+            label="Save", command=self.save_sdcard, accelerator="Cmd+S", underline=0
         )
         self.add_command(
             label="Save As",
             command=self.save_as_sdcard,
-            accelerator='Shift-Cmd+S',
-            underline=0
+            accelerator="Shift-Cmd+S",
+            underline=0,
         )
-      # self.add_separator()
-      # self.add_command(
-      #     label="Quit",
-      #     command=self.quit,
-      #     accelerator='Cmd+Q',
-      #     underline=0,
-      # )
+
+    # self.add_separator()
+    # self.add_command(
+    #     label="Quit",
+    #     command=self.quit,
+    #     accelerator='Cmd+Q',
+    #     underline=0,
+    # )
 
     def open_sdcard(self):
         name = filedialog.askdirectory()
-        self.controller.do('open_sdcard', name)
+        self.controller.do("open_sdcard", name)
 
     def save_sdcard(self):
-        #name = filedialog.asksavefilename()
-        self.controller.do('save_sdcard')
+        # name = filedialog.asksavefilename()
+        self.controller.do("save_sdcard")
 
     def save_as_sdcard(self):
         name = filedialog.asksaveasfilename()
-        self.controller.do('save_sdcard', name)
+        self.controller.do("save_sdcard", name)
 
     # def quit(self):
     #     self.controller.do('quit')
@@ -69,25 +67,25 @@ class SessionMenu(Menu):
             # command=self.set_session,
             # accelerator='Ctrl+O',
             # inderline=0,
-            state='disabled',
+            state="disabled",
         )
         self.add_separator()
         self.add_command(
             label="Set As Last",
             command=lambda: None,
-            accelerator='Ctrl+L',
+            accelerator="Ctrl+L",
             underline=0,
         )
         self.add_command(
             label="Save",
             command=lambda: None,
-            accelerator='Ctrl+S',
+            accelerator="Ctrl+S",
             underline=0,
         )
         self.add_command(
             label="Save as",
             command=lambda: None,
-            accelerator='Shift+Ctrl+S',
+            accelerator="Shift+Ctrl+S",
             underline=0,
         )
         self.add_command(
@@ -95,24 +93,24 @@ class SessionMenu(Menu):
             command=lambda: None,
             # accelerator='Shift+Ctrl+S',
             underline=0,
-            state='disabled',
+            state="disabled",
         )
         self.add_command(
             label="Delete",
             command=lambda: None,
             # accelerator='Shift+Ctrl+S',
             underline=0,
-            state='disabled',
+            state="disabled",
         )
 
     def update_sessions(self):
         if not self.controller.sdcard:
-            self.entryconfig('Sessions', state='disabled')            
+            self.entryconfig("Sessions", state="disabled")
             return
-        self.entryconfig('Sessions', state='normal')
+        self.entryconfig("Sessions", state="normal")
         self.open_sessions.delete(0, END)
         for s in self.controller.sdcard.sessions:
-            logger.info(f'update_sessions: add {s}')
+            logger.info(f"update_sessions: add {s}")
             self.open_sessions.add_command(
                 label=s,
                 command=lambda s=s: self.set_session(s),
@@ -120,6 +118,7 @@ class SessionMenu(Menu):
 
     def set_session(self, s):
         self.controller.set_session(s)
+
 
 class ViewMenu(Menu):
     def __init__(self, parent, controller):
@@ -152,13 +151,13 @@ class ViewMenu(Menu):
         )
 
     def toggle_session_bar(self):
-        logger.info(f'Show Session Bar')
-        self.controller.show_object('session_bar', self.session_bar_var.get())
+        logger.info(f"Show Session Bar")
+        self.controller.show_object("session_bar", self.session_bar_var.get())
 
     def toggle_phrase_bar(self):
-        logger.info(f'Show Phrase Bar')
-        self.controller.show_object('phrase_bar', self.phrase_bar_var.get())
+        logger.info(f"Show Phrase Bar")
+        self.controller.show_object("phrase_bar", self.phrase_bar_var.get())
 
     def toggle_status_bar(self):
-        logger.info(f'Show Status Bar')
-        self.controller.show_object('status_bar', self.status_bar_var.get())
+        logger.info(f"Show Status Bar")
+        self.controller.show_object("status_bar", self.status_bar_var.get())

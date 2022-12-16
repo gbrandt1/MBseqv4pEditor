@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "mbseqv4p_editor"
+version = "0.1.0"
+description = ""
+authors = ["Gerhard Brandt <gbrandt@cern.ch>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+ttkthemes = "^3.2.2"
+
+[tool.poetry.scripts]
+mbs4edit = "mbseqv4p_editor.mbs4edit:run"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
